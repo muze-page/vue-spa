@@ -1,0 +1,21 @@
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<div id="vuespa">
+
+</div>
+<script>
+    const App = {
+        setup() {
+            const data = Vue.ref("333");
+            //axios.post("").then((response) => {
+            //  data.value = response.data;
+            //});
+
+            return { data };
+        },
+        template:
+            '<input值：{{data}}'
+        ,
+    };
+
+    Vue.createApp(App).mount("#vuespa");
+</script>
