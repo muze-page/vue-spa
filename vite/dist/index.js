@@ -1,5 +1,4 @@
 //vite/dist/index.js
-//console.table(dataLocal);
 
 const App = {
   setup() {

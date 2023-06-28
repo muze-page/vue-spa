@@ -8,7 +8,7 @@ Author URI: https://www.npc.ink
 Version: 1.0.0
 */
 
-//require_once plugin_dir_path(__FILE__) . 'index.php';
+
 //接口
 require_once plugin_dir_path(__FILE__) . 'interface.php';
 //创建一个菜单
@@ -47,6 +47,11 @@ function vuespa_menu_page_display()
     echo "<pre>";
     print_r(vuespa_data());
     echo "</pre>";
+
+    echo "<h3>调用选项值</h3>";
+    echo get_option('dataOne');
+    echo "<br/>";
+    echo get_option('dataTwo');
 } // vuespa_menu_page_display
 
 
@@ -62,6 +67,7 @@ function vuespa_load_vues($hook)
     $ver = '53';
     //加载到页面顶部
     wp_enqueue_style('vite', plugin_dir_url(__FILE__) . 'vite/dist/index.css', array(), $ver, false);
+    //加载到页面底部
     wp_enqueue_script('vue', 'https://unpkg.com/vue@3/dist/vue.global.js', array(), $ver, true);
     wp_enqueue_script('axios', 'https://unpkg.com/axios/dist/axios.min.js', array(), $ver, true);
     wp_enqueue_script('vite', plugin_dir_url(__FILE__) . 'vite/dist/index.js', array(), $ver, true);
@@ -84,6 +90,29 @@ function vuespa_data()
         "str" => "Hello, world! - Npcink",
         "num" => 25,
         "city" => [1, 2, 3, 4, 5],
+        "user" => vuespa_get_user_meat(),
     ];
     return $person;
+}
+
+
+//提供用户信息
+function vuespa_get_user_meat()
+{
+    global $wp_roles;
+    $editable_roles = get_editable_roles();
+    $roles = array_keys($editable_roles);
+    $subscriber_key = array_search('subscriber', $roles);
+    if (false !== $subscriber_key) {
+        $roles = array_slice($roles, 0, $subscriber_key);
+    }
+    $users = get_users(array('role__in' => $roles));
+    $user_data = array();
+    foreach ($users as $user) {
+        $user_data[] = array(
+            'id'   => $user->ID,
+            'name' => $user->user_login,
+        );
+    }
+    return $user_data;
 }

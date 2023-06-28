@@ -1,7 +1,8 @@
 <?php
+//interface.php
 //接口文件
-
-add_action('rest_api_init', function () {
+function vuespa_create_api()
+{
     register_rest_route('pf/v1', '/get_option/', array( // 完整命名空间为：/wp-json/pf/v1/
         'methods' => 'POST',
         'callback' => 'get_option_by_RestAPI',
@@ -13,7 +14,8 @@ add_action('rest_api_init', function () {
             return current_user_can('manage_options'); // 只有管理员才有权限修改
         },
     ));
-});
+}
+add_action('rest_api_init', 'vuespa_create_api');
 
 
 //读取Option
