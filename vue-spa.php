@@ -96,23 +96,27 @@ function vuespa_data()
 }
 
 
-//提供用户信息
+//整理并提供用户信息
 function vuespa_get_user_meat()
 {
-    global $wp_roles;
-    $editable_roles = get_editable_roles();
+    //获取所有角色
+    $editable_roles = wp_roles()->roles;
     $roles = array_keys($editable_roles);
-    $subscriber_key = array_search('subscriber', $roles);
+    //获取除了'subscriber'(订阅者)角色之外的所有角色的用户数据
+    $subscriber_key = array_search('subscriber', $roles, true);
     if (false !== $subscriber_key) {
         $roles = array_slice($roles, 0, $subscriber_key);
     }
+
     $users = get_users(array('role__in' => $roles));
-    $user_data = array();
-    foreach ($users as $user) {
-        $user_data[] = array(
+
+    //转为关联数组
+    $user_data = array_map(function ($user) {
+        return [
             'id'   => $user->ID,
-            'name' => $user->user_login,
-        );
-    }
+            'name' => $user->display_name,
+        ];
+    }, $users);
+
     return $user_data;
 }

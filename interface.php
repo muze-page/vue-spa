@@ -35,17 +35,33 @@ function get_option_by_RestAPI($data)
 
 
 //保存Option
-//一对一保存
 function update_option_by_RestAPI($data)
 {
+
     //判断是否是管理员
     if (current_user_can('manage_options')) {
-        //将传递数据转成数组类型
-        $dataArray = json_decode($data->get_body(), true);
+        //转为JSON对象 - 重点，这里没有true，是转为对象
+        $dataArray = json_decode($data->get_body());
+        //存储结果
+        $result = new stdClass();
+
         //循环保存选项
         foreach ($dataArray as $option_name => $value) {
-            update_option($option_name, $value);
+
+            //判断，是否为对象
+            if (is_object($value)) {
+                //是非空数组，循环保存值
+                foreach ($value as $arr => $data) {
+                    //更新值    
+                    update_option($arr, $data);
+                }
+            } else {
+                //不是对象，则表示只有一个选项需要保存。
+                update_option($option_name, $value);
+            }
+            $result->$option_name = $value;
         }
+
         //返回成功信息
         return new WP_REST_Response(array(
             'success' => true,

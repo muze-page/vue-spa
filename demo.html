@@ -1,20 +1,31 @@
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <div id="vuespa">
-
+    <select v-model="data" multiple>
+        <option v-for="option in options" :key="option.value" :value="option.value">
+            {{ option.label }}
+        </option>
+    </select>
+    <p>你选择了：{{ data }}</p>
 </div>
 <script>
     const App = {
         setup() {
-            const data = Vue.ref("333");
-            //axios.post("").then((response) => {
-            //  data.value = response.data;
-            //});
+            const data = Vue.ref([]);
+            const options = [
+                { label: '选项1', value: 'option1' },
+                { label: '选项2', value: 'option2' },
+                { label: '选项3', value: 'option3' },
+                { label: '选项4', value: 'option4' },
+                { label: '选项5', value: 'option5' },
+                { label: '选项6', value: 'option6' },
+                { label: '选项7', value: 'option7' }
+            ];
 
-            return { data };
+            return { data, options };
         },
-        template:
-            '<input值：{{data}}'
-        ,
+        //template:
+        //    '<input值：{{data}}'
+        //,
     };
 
     Vue.createApp(App).mount("#vuespa");
