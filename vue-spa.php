@@ -52,6 +52,12 @@ function vuespa_menu_page_display()
     echo get_option('dataOne');
     echo "<br/>";
     echo get_option('dataTwo');
+    echo "<br/>";
+    print_r(get_option('dataName'));
+    echo "<br/>";
+    echo get_option('dataImage');
+    echo "<br/>";
+    echo get_option('dataSelectedImage');
 } // vuespa_menu_page_display
 
 
@@ -120,3 +126,6 @@ function vuespa_get_user_meat()
 
     return $user_data;
 }
+
+
+
