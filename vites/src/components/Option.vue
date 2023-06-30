@@ -1,17 +1,17 @@
 <script setup>
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, computed } from "vue";
 import axios from "axios";
 
-const dataLocal = {
-  route: "http://localhost:5173/wp-json/",
-  nonce: "asdf",
-  data: {
-    user: [
-      { id: 1, name: "111" },
-      { id: 2, name: "222" },
-    ],
-  },
-};
+//const dataLocal = {
+//  route: "http://localhost:5173/wp-json/",
+//  nonce: "asdf",
+//  data: {
+//    user: [
+//      { id: 1, name: "111" },
+//      { id: 2, name: "222" },
+//    ],
+//  },
+//};
 
 const siteData = dataLocal.data;
 
@@ -28,6 +28,10 @@ const datas = reactive({
   dataName: [],
   dataImage: "",
   dataSelectedImage: "",
+  check: {
+    name: "",
+    phone: "",
+  },
 });
 
 //获取数据
@@ -46,6 +50,8 @@ const get_option = () => {
       datas.dataName = data.dataName;
       datas.dataImage = data.dataImage;
       datas.dataSelectedImage = data.dataSelectedImage;
+      datas.check.name = data.check.name;
+      datas.check.phone = data.check.phone;
     })
     .catch((error) => {
       window.alert("连接服务器失败或后台读取出错！数据读取失败");
@@ -125,6 +131,19 @@ const selectImage = (imageUrl) => {
   datas.dataSelectedImage = imageUrl;
 };
 
+//验证名称
+const isName = computed(() => {
+  // 正则表达式验证名字，2到6个中文字符
+  const reg = /^[\u4e00-\u9fa5]{2,6}$/;
+  return reg.test(datas.check.name);
+});
+//验证电话号码
+const isPhone = computed(() => {
+  // 正则表达式验证电话号码
+  const reg = /^1[3456789]\d{9}$/;
+  return reg.test(datas.check.phone);
+});
+
 //页面初始加载
 onMounted(() => {
   //获取选项值
@@ -164,10 +183,21 @@ onMounted(() => {
   <img :src="datas.dataSelectedImage" v-if="datas.dataSelectedImage" />
   <hr />
 
+  <h3>数据校验</h3>
+  姓名：<input type="text" v-model="datas.check.name" />
+  <p v-if="!isName" class="check">格式错误 - 必须为两字到六字中文</p>
+  <br />
+  手机号：<input type="text" v-model="datas.check.phone" />
+  <p v-if="!isPhone" class="check">格式错误 - 必须是1开头的11位手机号</p>
+  <hr />
+
   <button class="button button-primary" @click="update_option">保存</button>
 </template>
 
 <style scoped>
+input {
+  display: block;
+}
 img {
   max-width: 150px;
   height: auto;
@@ -177,5 +207,11 @@ img {
   max-width: 800px;
   display: flex;
   margin: 1em 0;
+}
+
+.check {
+  font-size: 12px;
+  color: #ff3c3c;
+  margin: 0px 1em;
 }
 </style>

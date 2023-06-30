@@ -18,19 +18,33 @@ function vuespa_create_api()
 add_action('rest_api_init', 'vuespa_create_api');
 
 
+
+
 //读取Option
-//仅支持一对一的数据请求
+//支持数组类数据请求
 function get_option_by_RestAPI($data)
 {
-    //将传递数据转成数组类型
+    // 将输入数据转换成数组类型 
     $dataArray = json_decode($data->get_body(), true);
-    //新建数组
     $return = array();
-    //循环获取对应选项ID的值，并将其存储在对应关联数组中，若拿不到值，则为空
+    // 遍历数组，检查每个元素是否为对象
     foreach ($dataArray as $option_name => $value) {
-        $return[$option_name] = get_option($option_name) ? get_option($option_name) : "";
+        // 初始化当前选项的值数组
+        $option_value = array();
+        // 如果当前元素是一个非空数组，则遍历其中的每个字段
+        if (is_array($value) && !empty($value)) {
+            foreach ($value as $field_name => $field_value) {
+                // 获取指定选项的值，如果不存在，则使用空字符串代替
+                $option_value[$field_name] = get_option($field_name, '');
+            }
+            // 将当前选项及其值添加到返回数组中
+            $return[$option_name] = $option_value;
+        } else {
+            // 如果当前元素非数组或数组为空，获取指定选项的值
+            $return[$option_name] = get_option($option_name, '');
+        }
     }
-    return $return;
+    return $return; // 返回所有选项的键值对
 }
 
 
