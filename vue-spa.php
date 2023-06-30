@@ -11,6 +11,7 @@ Version: 1.0.0
 
 //接口
 require_once plugin_dir_path(__FILE__) . 'interface.php';
+
 //创建一个菜单
 function vuespa_create_menu_page()
 {
@@ -19,7 +20,7 @@ function vuespa_create_menu_page()
         'VueSpa',                      // 要为此实际菜单项显示的文本
         'administrator',               // 哪种类型的用户可以看到此菜单
         'vuespa_id',                   //  此菜单项的唯一ID（即段塞）
-        'vuespa_menu_page_display',    // 呈现此页面的菜单时要调用的函数的名称
+        'vuespa_menu_page_display',    // 呈现此页面的菜单时要调用的函数的名称 'vuespa_menu_page_display'
         'dashicons-admin-customizer',  //图标 - 默认图标
         '500.1',                       //位置
     );
@@ -126,6 +127,3 @@ function vuespa_get_user_meat()
 
     return $user_data;
 }
-
-
-
