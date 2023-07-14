@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Vue - SPA 
-Plugin URI: https://www.npc.ink
+Plugin URI: https://www.npc.ink/277241.html
 Description: 将vue构建的页面嵌入WordPress 中并产生交互
 Author: Muze
 Author URI: https://www.npc.ink
@@ -127,7 +127,7 @@ function vuespa_get_user_meat()
 }
 
 //模块导入
-function add_type_attribute_to_script($tag, $handle)
+function add_type_attribute_to_script_vue($tag, $handle)
 {
     // 在这里判断需要添加 type 属性的 JS 文件，比如文件名包含 xxx.js
     if (strpos($tag, 'index.js') !== false) {
@@ -136,4 +136,11 @@ function add_type_attribute_to_script($tag, $handle)
     }
     return $tag;
 }
-add_filter('script_loader_tag', 'add_type_attribute_to_script', 10, 2);
+add_filter('script_loader_tag', 'add_type_attribute_to_script_vue', 10, 2);
+
+
+//设置按钮
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
+    $links[] = '<a href="' . get_admin_url(null, '?page=vuespa_id') . '">' . __('设置', 'n') . '</a>';
+    return $links;
+});
